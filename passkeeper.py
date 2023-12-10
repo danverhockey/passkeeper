@@ -1,8 +1,11 @@
 import tkinter as tk
+from tkinter import scrolledtext
 import sqlite3
+
 
 def clear_entry(entry_name):
     entry_name.delete(0, 'end')
+
 
 def show_all_entries():
     connection = sqlite3.connect("passbook.db")
@@ -13,10 +16,11 @@ def show_all_entries():
     for entry in sorted(rows):
         all_entries = all_entries + f"{entry[0]}, Username: {entry[1]}, Password: {entry[2]}\n"
 
-    show_all_result["text"] = all_entries
+    show_all_result.insert(tk.INSERT, all_entries)
 
     cursor.close()
     connection.close()
+
 
 def show_single_entry():
     company = single_entry.get().lower()
@@ -37,6 +41,7 @@ def show_single_entry():
 
     clear_entry(single_entry)
 
+
 def add_entry():
     company = add_entry_company_entry.get().lower()
     username = add_entry_username_entry.get()
@@ -54,6 +59,7 @@ def add_entry():
     clear_entry(add_entry_username_entry)
     clear_entry(add_entry_password_entry)
 
+
 def update_password():
     company = update_entry_company_entry.get().lower()
     password = update_entry_password_entry.get()
@@ -69,6 +75,7 @@ def update_password():
     clear_entry(update_entry_company_entry)
     clear_entry(update_entry_password_entry)
 
+
 def delete_entry():
     company = delete_entry_entry.get().lower()
 
@@ -82,18 +89,22 @@ def delete_entry():
 
     clear_entry(delete_entry_entry)
 
+
 window = tk.Tk()
 window.title("Pass Keeper")
 window.resizable(width=True, height=True)
+
 
 window.columnconfigure([0, 1, 2], weight=1, minsize=300)
 window.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], weight=1, minsize=35)
 
 # Show all entries
 show_all_button = tk.Button(text="Show All Entries", command=show_all_entries)
-show_all_result = tk.Label()
+show_all_result = scrolledtext.ScrolledText(borderwidth=3, relief="sunken")
+v = tk.Scrollbar(orient="vertical")
 show_all_button.grid(row=0, column=0)
 show_all_result.grid(row=0, column=1)
+
 
 # Show single entry
 single_entry_label = tk.Label(text="Show single entry, enter in company name: ")
@@ -125,7 +136,7 @@ add_entry_password_entry.grid(row=6, column=2)
 add_entry_button.grid(row=7, column=1)
 
 # Update Password
-update_entry_label=tk.Label(text="Update Entry")
+update_entry_label = tk.Label(text="Update Entry")
 update_entry_company_label = tk.Label(text="Enter in company name: ")
 update_entry_company_entry = tk.Entry()
 update_entry_password_label = tk.Label(text="Enter in new password: ")
@@ -149,5 +160,3 @@ delete_entry_entry.grid(row=13, column=1)
 delete_entry_button.grid(row=14, column=1)
 
 window.mainloop()
-
-
